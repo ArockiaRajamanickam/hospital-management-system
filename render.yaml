@@ -1,0 +1,21 @@
+# One-click deploy on Render: Dashboard -> New -> Blueprint -> pick this repo.
+# The server runs its own MongoDB and loads sample data on every start,
+# so the demo always begins with fresh data. Set MONGO_URI (MongoDB Atlas) to keep data permanently.
+services:
+  - type: web
+    name: carepoint-hms
+    runtime: node
+    plan: free
+    region: singapore
+    buildCommand: npm install --prefix server && npm install --prefix client --include=dev && npm run build --prefix client
+    startCommand: npm start --prefix server
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_VERSION
+        value: "20"
+      - key: TZ
+        value: Asia/Kolkata
+      - key: JWT_SECRET
+        generateValue: true
+      - key: MONGO_URI
+        sync: false
